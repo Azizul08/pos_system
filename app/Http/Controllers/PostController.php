@@ -109,7 +109,8 @@ class PostController extends Controller
 
 
     public function downloadExcel($data, $filename) 
-    {
+    {   
+        // dd($data,$filename);
         function cleanData(&$str)
         {
             $str = preg_replace("/\t/", "\\t", $str);
@@ -119,8 +120,11 @@ class PostController extends Controller
 
         header("Content-Disposition: attachment; filename=\"$filename\"");
         header("Content-Type: application/vnd.ms-excel");
+            // header('Cache-Control: max-age=0');
         $flag = false;
+        // dd($data);
         foreach($data as $row) {
+          
             if(!$flag) {
                 // display field/column names as first row
                 echo implode("\t", array_keys($row)) . "\n";
@@ -129,6 +133,7 @@ class PostController extends Controller
             array_walk($row, __NAMESPACE__ . '\cleanData');
             echo implode("\t", array_values($row)) . "\n";
         }
+        
         return true;
     }
 
@@ -220,13 +225,13 @@ class PostController extends Controller
 
         // $all_data = DB::table('posts')->limit(10)->get();
         foreach ($all_data as $key => $value) {
-            $data[$key]['id'] = $value->id;
-            $data[$key]['title'] = $value->title;
-            $data[$key]['description'] = $value->description;
+            $da[$key]['id'] = $value->id;
+            $da[$key]['title'] = $value->title;
+            $da[$key]['description'] = $value->description;
         }
-        // dd($data);
+        
         $filename = "custom_data_" . time() . ".xls";
-        $this->downloadExcel($data, $filename);
+        $this->downloadExcel($da, $filename);
         return true;
     }
 
