@@ -18,13 +18,27 @@
                     <a href="{{url('/all-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a>
     </div>
 
-    <div class="card-header bg-white" id="button">
+    <div class="mx-auto pull-right">
+            <form action="{{ url('/posts') }}" method="GET" role="search">
+                <div class="input-group">
+                    <input type="text" class="" name="term" placeholder="Search" id="term">
+                                  
+                </div>
+            </form>
+    </div>
+                        
+
+    <div class="card-header bg-white">
             <i class="fa fa-table"></i> Custom Data Download
-                  <a href="#" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
-                    <!-- <a href="{{url('/custom-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a> -->
+            <form action="{{url('/custom-data-excel')}}" method="POST">
+                @csrf
+                @foreach ($posts as $post)
+                <input type="hidden" name="posts[]" value="{{$post}}">
+                @endforeach
+                  <button type="submit" class="btn btn-primary btn-small pull-right text-white">Custom Excel</button>
+            </form>
     </div>
 
-   
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -59,8 +73,10 @@
         </tr>
         @endforeach
     </table>
+   
 
-    <script>
+
+    <!-- <script>
     $(document).ready(function(){
         // console.log('Hellow World');
 
@@ -108,7 +124,7 @@
        });
        
     });    
-    </script>
+    </script> -->
   
     {!! $posts->links() !!}
       
