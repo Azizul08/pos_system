@@ -18,10 +18,12 @@
                     <a href="{{url('/all-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a>
     </div>
 
+
+
     <div class="card-header bg-white" id="button">
             <i class="fa fa-table"></i> Custom Data Download
-                  <a href="#" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
-                    <!-- <a href="{{url('/custom-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a> -->
+                  <a href="/custom-data-excel" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
+                  <a href="/custom-data-excel/{$low}/{$high}" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
     </div>
 
    
@@ -30,6 +32,29 @@
             <p>{{ $message }}</p>
         </div>
     @endif
+
+    <div class="mx-auto pull-right">
+                      <div class="">
+                          <form action="{{ url('/posts') }}" method="GET" role="search">
+
+                              <div class="input-group">
+                                  <!-- <span class="input-group-btn mr-5 mt-1">
+                                      <button class="btn btn-info" type="submit" title="Search">
+                                          <span class="fas fa-search"></span>
+                                      </button>
+                                  </span> -->
+                                  <input type="text" class="" name="term" placeholder="Search" id="term">
+                                  <!-- <a href="{{ url('/member-view') }}" class=" mt-1">
+                                      <span class="input-group-btn">
+                                          <button class="btn btn-danger" type="button" title="Refresh page">
+                                              <span class="fas fa-sync-alt"></span>
+                                          </button>
+                                      </span>
+                                  </a> -->
+                              </div>
+                          </form>
+                      </div>
+    </div>
    
     <table class="table table-bordered">
         <tr>
@@ -60,7 +85,7 @@
         @endforeach
     </table>
 
-    <script>
+<!--     <script>
     $(document).ready(function(){
         // console.log('Hellow World');
 
@@ -108,8 +133,8 @@
        });
        
     });    
-    </script>
+    </script> -->
   
-    {!! $posts->links() !!}
+    
       
 @endsection

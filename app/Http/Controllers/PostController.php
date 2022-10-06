@@ -15,14 +15,37 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-       // $posts = Post::latest()->paginate(10);
-        $posts = Post::paginate(10);
+    public function index(Request $request)
+    {  
+        // dd($request->id);
+       // $posts = Post::where('posts')->get();
+
+        // $posts = Post::paginate(10);
         // dd($posts);
-    
-        return view('posts.index',compact('posts'))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+        //$posts= DB::table('posts')->where('id', '>=' ,11)->where('id', '<', 20)->get();
+        // $posts = DB::table('posts')->get();
+
+        // //search
+        //    $posts_search=Post::where([
+        //     ['id','!=',Null],
+        //     ['title','!=',Null],
+        //     ['description','!=',Null],
+        //     [function($query)use($request){
+        //         if(($term=$request->term)){
+        //             $query->orWhere('id','LIKE','%'.$term.'%')
+        //                   ->orWhere('title','LIKE','%'.$term.'%')
+        //                   ->orWhere('description','LIKE','%'.$term.'%')->get();
+        //         }
+        //     }]
+        // ])
+        // // ->orderBy("id","desc")
+        // // ->paginate(10);
+
+        // $posts=Post::all();
+        $posts = DB::table('posts')->get();
+        return view('posts.index',compact('posts',));
+            // ->with('i', (request()->input('page', 1) - 1) * 10);
+           // viewpage <!-- {!! $posts->links() !!} -->
     }
 
     /**
@@ -56,6 +79,7 @@ class PostController extends Controller
     {   
         //$posts = Post::latest();
         // $posts = DB::table('posts')->get();
+        // dd($post->id);
         return view('posts.show',compact('post'));
     }
 
@@ -178,8 +202,8 @@ class PostController extends Controller
     public function CustomdataExcel(Request $request)
     {    
        // dd($request->id,$request->title);
-       dd($request->id);
-        
+       //dd($request->id);
+        // dd ($request->all());
         // dd($request->get('id'), $request->get('name'),$request->get('description'));
         // dd($request->all());
 
@@ -192,6 +216,15 @@ class PostController extends Controller
        // $all_data = DB::table('posts')->$request->get();
 
         // $all_data = DB::table('posts')->limit(10)->get();
+        // $all_data = DB::table('posts')->get();
+
+        // $all_data= DB::table('posts')->where('id', '>=' ,'$low')->where('id', '<', '$high')->get();
+        // return response()->json($all_data);
+        // $all_data= DB::table('posts')->where('id', '>=' ,10)->where('id', '<', 15)->get();
+        $all_data= DB::table('posts')->where('title', '=' ,'Dr.')->get();
+        // $all_data= Post::where('title', '=' ,'Dr.')->get();
+        //  dd($all_data);
+
         foreach ($all_data as $key => $value) {
             $data[$key]['id'] = $value->id;
             $data[$key]['title'] = $value->title;
