@@ -18,13 +18,25 @@
                     <a href="{{url('/all-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a>
     </div>
 
-<<<<<<< HEAD
+    <div class="mx-auto pull-right">
+            <form action="{{ url('/posts') }}" method="GET" role="search">
+                <div class="input-group">
+                    <input type="text" class="" name="term" placeholder="Search" id="term">
+                                  
+                </div>
+            </form>
+    </div>
+                        
 
-
-    <div class="card-header bg-white" id="button">
+    <div class="card-header bg-white">
             <i class="fa fa-table"></i> Custom Data Download
-                  <a href="/custom-data-excel" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
-                  <a href="/custom-data-excel/{$low}/{$high}" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
+            <form action="{{url('/custom-data-excel')}}" method="POST">
+                @csrf
+                @foreach ($posts as $post)
+                <input type="hidden" name="posts[]" value="{{$post}}">
+                @endforeach
+                  <button type="submit" class="btn btn-primary btn-small pull-right text-white">Custom data Export to Excel</button>
+            </form>
 
     </div>
 
@@ -33,29 +45,6 @@
             <p>{{ $message }}</p>
         </div>
     @endif
-
-    <div class="mx-auto pull-right">
-                      <div class="">
-                          <form action="{{ url('/posts') }}" method="GET" role="search">
-
-                              <div class="input-group">
-                                  <!-- <span class="input-group-btn mr-5 mt-1">
-                                      <button class="btn btn-info" type="submit" title="Search">
-                                          <span class="fas fa-search"></span>
-                                      </button>
-                                  </span> -->
-                                  <input type="text" class="" name="term" placeholder="Search" id="term">
-                                  <!-- <a href="{{ url('/member-view') }}" class=" mt-1">
-                                      <span class="input-group-btn">
-                                          <button class="btn btn-danger" type="button" title="Refresh page">
-                                              <span class="fas fa-sync-alt"></span>
-                                          </button>
-                                      </span>
-                                  </a> -->
-                              </div>
-                          </form>
-                      </div>
-    </div>
    
     <table class="table table-bordered">
         <tr>
@@ -86,10 +75,9 @@
         @endforeach
     </table>
    
+{!! $posts->links() !!}
 
-
-
-    <!-- <script>
+<!--     <script>
 
     $(document).ready(function(){
         // console.log('Hellow World');

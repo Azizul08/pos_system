@@ -25,7 +25,6 @@ Route::resource('posts', PostController::class);
 Route::get('/all-data-excel', [PostController::class, 'AlldataExcel']);
 Route::get('/all-data-csv', [PostController::class, 'AlldataCsv']);
 
-
 Route::post('/custom-data-excel', [PostController::class, 'CustomdataExcel']);
-// Route::get('/custom-data-excel', [PostController::class, 'CustomdataExcel']);
+
 

@@ -33,12 +33,11 @@ class PostController extends Controller
                 }
             }]
         ])
-        ->orderBy("id","desc")
+        // ->orderBy("id","desc")
         ->paginate(10);
 
         return view('posts.index',compact('posts'))
             ->with('i', (request()->input('page', 1) - 1) * 10);
-
     }
 
     /**
@@ -137,7 +136,8 @@ class PostController extends Controller
             echo implode("\t", array_values($row)) . "\n";
         }
         
-        return true;
+        // return true;
+         exit;
     }
 
       public function downloadCsv($data, $filename) 
@@ -199,6 +199,10 @@ class PostController extends Controller
 
     public function CustomdataExcel(Request $request)
     {    
+       // dd($request->id,$request->title);
+       //dd($request->id);
+        // dd ($request->all());
+        // dd($request->get('id'), $request->get('name'),$request->get('description'));
 
         // dd($request->all());
 
@@ -233,7 +237,7 @@ class PostController extends Controller
         // $all_data= DB::table('posts')->where('id', '>=' ,'$low')->where('id', '<', '$high')->get();
         // return response()->json($all_data);
         // $all_data= DB::table('posts')->where('id', '>=' ,10)->where('id', '<', 15)->get();
-        $all_data= DB::table('posts')->where('title', '=' ,'Dr.')->get();
+        // $all_data= DB::table('posts')->where('title', '=' ,'Dr.')->get();
         // $all_data= Post::where('title', '=' ,'Dr.')->get();
         //  dd($all_data);
 
