@@ -16,36 +16,29 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {  
-        // dd($request->id);
-       // $posts = Post::where('posts')->get();
 
+    {
+        // $posts = Post::latest()->paginate(10);
         // $posts = Post::paginate(10);
         // dd($posts);
-        //$posts= DB::table('posts')->where('id', '>=' ,11)->where('id', '<', 20)->get();
-        // $posts = DB::table('posts')->get();
+        $posts=Post::where([
+            ['id','!=',Null],
+            ['title','!=',Null],
+            ['description','!=',Null],
+            [function($query)use($request){
+                if(($term=$request->term)){
+                    $query->orWhere('id','LIKE','%'.$term.'%')
+                          ->orWhere('title','LIKE','%'.$term.'%')
+                          ->orWhere('description','LIKE','%'.$term.'%')->get();
+                }
+            }]
+        ])
+        ->orderBy("id","desc")
+        ->paginate(10);
 
-        // //search
-        //    $posts_search=Post::where([
-        //     ['id','!=',Null],
-        //     ['title','!=',Null],
-        //     ['description','!=',Null],
-        //     [function($query)use($request){
-        //         if(($term=$request->term)){
-        //             $query->orWhere('id','LIKE','%'.$term.'%')
-        //                   ->orWhere('title','LIKE','%'.$term.'%')
-        //                   ->orWhere('description','LIKE','%'.$term.'%')->get();
-        //         }
-        //     }]
-        // ])
-        // // ->orderBy("id","desc")
-        // // ->paginate(10);
+        return view('posts.index',compact('posts'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
 
-        // $posts=Post::all();
-        $posts = DB::table('posts')->get();
-        return view('posts.index',compact('posts',));
-            // ->with('i', (request()->input('page', 1) - 1) * 10);
-           // viewpage <!-- {!! $posts->links() !!} -->
     }
 
     /**
@@ -119,7 +112,8 @@ class PostController extends Controller
 
 
     public function downloadExcel($data, $filename) 
-    {
+    {   
+        // dd($data,$filename);
         function cleanData(&$str)
         {
             $str = preg_replace("/\t/", "\\t", $str);
@@ -129,8 +123,11 @@ class PostController extends Controller
 
         header("Content-Disposition: attachment; filename=\"$filename\"");
         header("Content-Type: application/vnd.ms-excel");
+            // header('Cache-Control: max-age=0');
         $flag = false;
+        // dd($data);
         foreach($data as $row) {
+          
             if(!$flag) {
                 // display field/column names as first row
                 echo implode("\t", array_keys($row)) . "\n";
@@ -139,7 +136,8 @@ class PostController extends Controller
             array_walk($row, __NAMESPACE__ . '\cleanData');
             echo implode("\t", array_values($row)) . "\n";
         }
-        exit;
+        
+        return true;
     }
 
       public function downloadCsv($data, $filename) 
@@ -201,11 +199,25 @@ class PostController extends Controller
 
     public function CustomdataExcel(Request $request)
     {    
-       // dd($request->id,$request->title);
-       //dd($request->id);
-        // dd ($request->all());
-        // dd($request->get('id'), $request->get('name'),$request->get('description'));
+
         // dd($request->all());
+
+        // dd($request->id,$request->title);
+        // dd($request->id);
+        // $data = array(
+        //     'id' => $request->id,
+        //     'title' => $request->title,
+        //     'description' => $request->description,
+        // );
+        $data = $request->all();
+        $post = $data['posts'];
+       foreach($post as $p){
+           $a[]= json_decode($p);
+       }
+        $all_data=$a;
+        // dd($all_data);
+
+        // dd($request->get('id'), $request->get('name'),$request->get('description'));
 
         // $posts = Post::paginate(10);
         // $all_data = DB::table('posts')->$posts->get();
@@ -226,12 +238,14 @@ class PostController extends Controller
         //  dd($all_data);
 
         foreach ($all_data as $key => $value) {
-            $data[$key]['id'] = $value->id;
-            $data[$key]['title'] = $value->title;
-            $data[$key]['description'] = $value->description;
+            $da[$key]['id'] = $value->id;
+            $da[$key]['title'] = $value->title;
+            $da[$key]['description'] = $value->description;
         }
+        
         $filename = "custom_data_" . time() . ".xls";
-        $this->downloadExcel($data, $filename);
+        $this->downloadExcel($da, $filename);
+        return true;
     }
 
 

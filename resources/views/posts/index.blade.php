@@ -18,15 +18,16 @@
                     <a href="{{url('/all-data-csv')}}" class="btn btn-success btn-small pull-right text-white" style="margin-right:5px;">CSV</a>
     </div>
 
+<<<<<<< HEAD
 
 
     <div class="card-header bg-white" id="button">
             <i class="fa fa-table"></i> Custom Data Download
                   <a href="/custom-data-excel" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
                   <a href="/custom-data-excel/{$low}/{$high}" id="button" class="btn btn-primary btn-small pull-right  button text-white" >Excel</a>
+
     </div>
 
-   
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -84,8 +85,12 @@
         </tr>
         @endforeach
     </table>
+   
 
-<!--     <script>
+
+
+    <!-- <script>
+
     $(document).ready(function(){
         // console.log('Hellow World');
 
