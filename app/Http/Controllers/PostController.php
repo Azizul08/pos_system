@@ -21,22 +21,22 @@ class PostController extends Controller
         // $posts = Post::latest()->paginate(10);
         // $posts = Post::paginate(10);
         // dd($posts);
-        $posts=Post::where([
-            ['id','!=',Null],
-            ['title','!=',Null],
-            ['description','!=',Null],
-            [function($query)use($request){
-                if(($term=$request->term)){
-                    $query->orWhere('id','LIKE','%'.$term.'%')
-                          ->orWhere('title','LIKE','%'.$term.'%')
-                          ->orWhere('description','LIKE','%'.$term.'%')->get();
+        $posts = Post::where([
+            ['id', '!=', Null],
+            ['title', '!=', Null],
+            ['description', '!=', Null],
+            [function ($query) use ($request) {
+                if (($term = $request->term)) {
+                    $query->orWhere('id', 'LIKE', '%' . $term . '%')
+                        ->orWhere('title', 'LIKE', '%' . $term . '%')
+                        ->orWhere('description', 'LIKE', '%' . $term . '%')->get();
                 }
             }]
         ])
-        // ->orderBy("id","desc")
-        ->paginate(10);
+            // ->orderBy("id","desc")
+            ->paginate(10);
 
-        return view('posts.index',compact('posts'))
+        return view('posts.index', compact('posts'))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -68,11 +68,11 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
-    {   
+    {
         //$posts = Post::latest();
         // $posts = DB::table('posts')->get();
         // dd($post->id);
-        return view('posts.show',compact('post'));
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -110,24 +110,24 @@ class PostController extends Controller
     }
 
 
-    public function downloadExcel($data, $filename) 
-    {   
+    public function downloadExcel($data, $filename)
+    {
         // dd($data,$filename);
         function cleanData(&$str)
         {
             $str = preg_replace("/\t/", "\\t", $str);
             $str = preg_replace("/\r?\n/", "\\n", $str);
-            if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+            if (strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
         }
 
         header("Content-Disposition: attachment; filename=\"$filename\"");
         header("Content-Type: application/vnd.ms-excel");
-            // header('Cache-Control: max-age=0');
+        // header('Cache-Control: max-age=0');
         $flag = false;
         // dd($data);
-        foreach($data as $row) {
-          
-            if(!$flag) {
+        foreach ($data as $row) {
+
+            if (!$flag) {
                 // display field/column names as first row
                 echo implode("\t", array_keys($row)) . "\n";
                 $flag = true;
@@ -135,21 +135,21 @@ class PostController extends Controller
             array_walk($row, __NAMESPACE__ . '\cleanData');
             echo implode("\t", array_values($row)) . "\n";
         }
-        
+
         // return true;
-         exit;
+        exit;
     }
 
-      public function downloadCsv($data, $filename) 
+    public function downloadCsv($data, $filename)
     {
         function cleanData(&$str)
         {
-            if($str == 't') $str = 'TRUE';
-            if($str == 'f') $str = 'FALSE';
-            if(preg_match("/^0/", $str) || preg_match("/^\+?\d{8,}$/", $str) || preg_match("/^\d{4}.\d{1,2}.\d{1,2}/", $str)) {
-            $str = "'$str";
+            if ($str == 't') $str = 'TRUE';
+            if ($str == 'f') $str = 'FALSE';
+            if (preg_match("/^0/", $str) || preg_match("/^\+?\d{8,}$/", $str) || preg_match("/^\d{4}.\d{1,2}.\d{1,2}/", $str)) {
+                $str = "'$str";
             }
-            if(strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+            if (strstr($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
         }
 
         header("Content-Disposition: attachment; filename=\"$filename\"");
@@ -158,8 +158,8 @@ class PostController extends Controller
         $out = fopen("php://output", 'w');
 
         $flag = false;
-        foreach($data as $row) {
-            if(!$flag) {
+        foreach ($data as $row) {
+            if (!$flag) {
                 // display field/column names as first row
                 fputcsv($out, array_keys($row), ',', '"');
                 $flag = true;
@@ -198,9 +198,9 @@ class PostController extends Controller
     }
 
     public function CustomdataExcel(Request $request)
-    {    
-       // dd($request->id,$request->title);
-       //dd($request->id);
+    {
+        // dd($request->id,$request->title);
+        //dd($request->id);
         // dd ($request->all());
         // dd($request->get('id'), $request->get('name'),$request->get('description'));
 
@@ -215,10 +215,10 @@ class PostController extends Controller
         // );
         $data = $request->all();
         $post = $data['posts'];
-       foreach($post as $p){
-           $a[]= json_decode($p);
-       }
-        $all_data=$a;
+        foreach ($post as $p) {
+            $a[] = json_decode($p);
+        }
+        $all_data = $a;
         // dd($all_data);
 
         // dd($request->get('id'), $request->get('name'),$request->get('description'));
@@ -229,7 +229,7 @@ class PostController extends Controller
         // $all_data = DB::table('posts')->simplepaginate(10)->get();
 
         // $all_data = Post::select('id', 'title')->get();
-       // $all_data = DB::table('posts')->$request->get();
+        // $all_data = DB::table('posts')->$request->get();
 
         // $all_data = DB::table('posts')->limit(10)->get();
         // $all_data = DB::table('posts')->get();
@@ -246,11 +246,9 @@ class PostController extends Controller
             $da[$key]['title'] = $value->title;
             $da[$key]['description'] = $value->description;
         }
-        
+
         $filename = "custom_data_" . time() . ".xls";
         $this->downloadExcel($da, $filename);
         return true;
     }
-
-
 }
